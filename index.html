@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Clema Bedrock College — Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:      #0B1F3A;
+  --panel:   #112240;
+  --card:    #16304F;
+  --border:  #1E3A5C;
+  --gold:    #C9A84C;
+  --gold-lt: #E8C97A;
+  --white:   #F0F4F8;
+  --muted:   #7A96B2;
+  --sky:     #3B82F6;
+  --green:   #10B981;
+  --red:     #EF4444;
+  --amber:   #F59E0B;
+  --radius:  10px;
+  --sidebar: 230px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+/* ── LOGIN ──────────────────────────────────────────── */
+#login-page {
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#071628 0%,#0B1F3A 50%,#0d2640 100%);
+  padding:24px;
+}
+.login-crest {
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#8B6914);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin-bottom:16px;
+  box-shadow:0 0 40px rgba(201,168,76,0.3);
+}
+.login-title {
+  font-family:'Crimson Pro',serif;font-size:2rem;
+  color:var(--white);text-align:center;margin-bottom:4px;
+}
+.login-sub { color:var(--muted);font-size:0.82rem;text-align:center;margin-bottom:32px;letter-spacing:0.1em;text-transform:uppercase; }
+.login-box {
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:14px;padding:36px 40px;width:100%;max-width:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.login-box h3{font-size:1rem;color:var(--gold);margin-bottom:22px;font-weight:600;}
+.lfield{margin-bottom:16px;}
+.lfield label{display:block;font-size:0.73rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;}
+.lfield input,.lfield select{
+  width:100%;padding:11px 14px;background:var(--card);
+  border:1.5px solid var(--border);border-radius:8px;
+  color:var(--white);font-size:0.9rem;font-family:'Inter',sans-serif;outline:none;
+}
+.lfield input:focus,.lfield select:focus{border-color:var(--gold);}
+.lfield input::placeholder{color:var(--muted);}
+.btn-login {
+  width:100%;padding:13px;background:var(--gold);color:#071628;
+  font-size:0.95rem;font-weight:700;border:none;border-radius:8px;
+  cursor:pointer;letter-spacing:0.04em;margin-top:6px;
+  transition:background .2s;
+}
+.btn-login:hover{background:var(--gold-lt);}
+.login-err{background:rgba(239,68,68,0.15);color:#FCA5A5;border-radius:7px;
+  padding:9px 13px;font-size:0.82rem;margin-top:12px;display:none;}
+.login-footer{color:var(--muted);font-size:0.75rem;text-align:center;margin-top:20px;}
+
+/* ── APP SHELL ──────────────────────────────────────── */
+#app{display:none;min-height:100vh;flex-direction:row;}
+
+/* Sidebar */
+.sidebar {
+  width:var(--sidebar);min-height:100vh;background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;
+}
+.sidebar-brand {
+  padding:20px 18px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.brand-crest {
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,var(--gold),#8B6914);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.brand-name{font-family:'Crimson Pro',serif;font-size:0.95rem;line-height:1.2;color:var(--white);}
+.brand-name span{display:block;font-size:0.65rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;font-family:'Inter',sans-serif;}
+
+.user-chip {
+  margin:14px 14px 10px;background:var(--card);border-radius:8px;
+  padding:10px 12px;border:1px solid var(--border);
+}
+.user-chip .role-badge {
+  font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  padding:2px 7px;border-radius:99px;margin-bottom:5px;display:inline-block;
+}
+.role-admin   {background:rgba(201,168,76,0.2);color:var(--gold);}
+.role-teacher {background:rgba(59,130,246,0.2);color:#93C5FD;}
+.role-student {background:rgba(16,185,129,0.2);color:#6EE7B7;}
+.user-chip .user-name{font-size:0.85rem;font-weight:600;color:var(--white);}
+.user-chip .user-id  {font-size:0.72rem;color:var(--muted);margin-top:1px;}
+
+.nav-section{padding:10px 14px 4px;}
+.nav-section-label{font-size:0.62rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.1em;padding:0 6px;margin-bottom:4px;}
+.nav-item {
+  display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border-radius:8px;cursor:pointer;font-size:0.85rem;color:var(--muted);
+  transition:background .15s,color .15s;margin-bottom:2px;
+}
+.nav-item:hover{background:var(--card);color:var(--white);}
+.nav-item.active{background:rgba(201,168,76,0.15);color:var(--gold);font-weight:600;}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center;}
+
+.sidebar-footer{margin-top:auto;padding:14px;border-top:1px solid var(--border);}
+.btn-logout{
+  width:100%;padding:9px;background:transparent;border:1px solid var(--border);
+  border-radius:7px;color:var(--muted);font-size:0.8rem;cursor:pointer;
+  transition:all .15s;
+}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* Main content */
+.main{margin-left:var(--sidebar);flex:1;min-height:100vh;}
+.topbar{
+  padding:16px 28px;border-bottom:1px solid var(--border);
+  background:var(--panel);display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:50;
+}
+.topbar h2{font-family:'Crimson Pro',serif;font-size:1.35rem;color:var(--white);}
+.topbar .term-badge{
+  background:var(--card);border:1px solid var(--border);
+  padding:5px 12px;border-radius:99px;font-size:0.75rem;color:var(--gold);
+}
+.content-area{padding:28px;}
+
+/* ── CARDS / WIDGETS ────────────────────────────────── */
+.widget{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:20px;}
+.widget-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--muted);margin-bottom:14px;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:20px;}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px 20px;
+}
+.stat-card .stat-num{font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1;}
+.stat-card .stat-lbl{font-size:0.75rem;color:var(--muted);margin-top:4px;}
+
+/* Subject pills */
+.subject-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.subject-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;cursor:pointer;transition:border-color .2s,transform .15s;
+}
+.subject-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.subject-card .sub-icon{font-size:1.5rem;margin-bottom:8px;}
+.subject-card .sub-name{font-size:0.9rem;font-weight:600;color:var(--white);}
+.subject-card .sub-meta{font-size:0.73rem;color:var(--muted);margin-top:3px;}
+
+/* Notes */
+.notes-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.back-btn{
+  background:var(--panel);border:1px solid var(--border);border-radius:7px;
+  padding:7px 14px;color:var(--muted);font-size:0.8rem;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+}
+.back-btn:hover{color:var(--white);border-color:var(--muted);}
+.note-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 22px;margin-bottom:14px;
+}
+.note-card .note-title{font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:6px;}
+.note-card .note-body{font-size:0.85rem;color:#A8C0D6;line-height:1.65;}
+.note-card .note-meta{font-size:0.72rem;color:var(--muted);margin-top:10px;
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.note-tag{background:rgba(201,168,76,0.12);color:var(--gold);
+  padding:2px 8px;border-radius:99px;font-size:0.68rem;font-weight:700;}
+
+/* Add note form */
+.add-note-form{background:var(--panel);border:1px solid var(--gold);
+  border-radius:var(--radius);padding:22px 24px;margin-bottom:20px;}
+.add-note-form h4{color:var(--gold);font-size:0.82rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.07em;margin-bottom:16px;}
+.form-field{margin-bottom:14px;}
+.form-field label{display:block;font-size:0.72rem;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px;}
+.form-field input,.form-field select,.form-field textarea{
+  width:100%;padding:10px 13px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:7px;color:var(--white);font-size:0.88rem;font-family:'Inter',sans-serif;outline:none;
+}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--gold);}
+.form-field textarea{resize:vertical;min-height:100px;}
+.btn-save{
+  padding:10px 22px;background:var(--gold);color:#071628;
+  font-weight:700;font-size:0.85rem;border:none;border-radius:7px;cursor:pointer;
+}
+.btn-save:hover{background:var(--gold-lt);}
+.btn-cancel{
+  padding:10px 18px;background:transparent;border:1px solid var(--border);
+  border-radius:7px;color:var(--muted);font-size:0.85rem;cursor:pointer;margin-left:8px;
+}
+
+/* Results table */
+.results-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+.results-table th{
+  text-align:left;padding:10px 14px;font-size:0.68rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+.results-table td{padding:12px 14px;border-bottom:1px solid rgba(30,58,92,0.5);color:var(--white);}
+.results-table tr:hover td{background:rgba(255,255,255,0.02);}
+.grade-pill{
+  padding:3px 10px;border-radius:99px;font-size:0.72rem;font-weight:700;
+  display:inline-block;
+}
+.grade-a{background:rgba(16,185,129,0.15);color:#6EE7B7;}
+.grade-b{background:rgba(59,130,246,0.15);color:#93C5FD;}
+.grade-c{background:rgba(245,158,11,0.15);color:#FCD34D;}
+.grade-f{background:rgba(239,68,68,0.15);color:#FCA5A5;}
+
+/* Exam launch card */
+.exam-launch{
+  background:linear-gradient(135deg,var(--panel),#0d2a4a);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 26px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+}
+.exam-launch .exam-info .exam-name{font-size:1rem;font-weight:600;color:var(--white);}
+.exam-launch .exam-info .exam-meta{font-size:0.78rem;color:var(--muted);margin-top:4px;}
+.btn-start-exam{
+  padding:10px 22px;background:var(--green);color:#fff;
+  font-weight:700;font-size:0.85rem;border:none;border-radius:7px;cursor:pointer;
+  white-space:nowrap;
+}
+.btn-start-exam:hover{opacity:0.88;}
+.btn-start-exam:disabled{background:var(--border);color:var(--muted);cursor:default;}
+
+/* Exam taking UI */
+#exam-taking{display:none;}
+.exam-topbar{
+  background:var(--panel);border-bottom:1px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+}
+.timer-pill{
+  background:var(--card);border:1px solid var(--border);border-radius:99px;
+  padding:6px 16px;font-size:1rem;font-weight:700;color:var(--gold);
+  font-variant-numeric:tabular-nums;
+}
+.timer-pill.warn{color:var(--red);border-color:var(--red);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.q-block{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:14px;}
+.q-num{font-size:0.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;}
+.q-text{font-size:0.95rem;font-weight:600;color:var(--white);line-height:1.5;margin-bottom:16px;}
+.opt{
+  display:flex;align-items:center;gap:11px;padding:10px 14px;
+  border:1.5px solid var(--border);border-radius:7px;cursor:pointer;
+  font-size:0.88rem;color:#A8C0D6;margin-bottom:8px;transition:all .15s;
+}
+.opt:hover{border-color:var(--gold);color:var(--white);}
+.opt.sel{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--white);}
+.opt input{accent-color:var(--gold);flex-shrink:0;}
+.short-in{
+  width:100%;padding:10px 13px;background:var(--card);border:1.5px solid var(--border);
+  border-radius:7px;color:var(--white);font-size:0.88rem;font-family:'Inter',sans-serif;
+  resize:vertical;min-height:70px;outline:none;
+}
+.short-in:focus{border-color:var(--gold);}
+.prog-bar-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.prog-track{flex:1;height:5px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--gold);border-radius:99px;transition:width .3s;}
+.prog-lbl{font-size:0.75rem;color:var(--muted);white-space:nowrap;}
+
+/* Results view */
+.score-hero{
+  background:linear-gradient(135deg,var(--panel),#0d2a4a);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:32px;text-align:center;margin-bottom:20px;
+}
+.score-ring{
+  width:110px;height:110px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#8B6914);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 16px;box-shadow:0 0 30px rgba(201,168,76,0.25);
+}
+.score-ring .sn{font-size:2rem;font-weight:700;color:#071628;line-height:1;}
+.score-ring .sd{font-size:0.78rem;color:rgba(7,22,40,0.7);margin-top:1px;}
+.score-hero h3{font-family:'Crimson Pro',serif;font-size:1.5rem;color:var(--white);}
+.score-hero p{color:var(--muted);font-size:0.85rem;margin-top:5px;}
+.breakdown-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 0;border-bottom:1px solid rgba(30,58,92,0.6);font-size:0.85rem;
+}
+.breakdown-item .bi-icon{flex-shrink:0;font-size:1rem;margin-top:1px;}
+.bi-qlbl{font-size:0.7rem;color:var(--muted);margin-bottom:3px;}
+.bi-qtext{color:var(--white);font-weight:500;}
+.bi-ans{font-size:0.78rem;margin-top:4px;}
+.ans-ok{color:var(--green);}
+.ans-bad{color:var(--red);}
+.ans-correct{color:var(--green);font-weight:600;}
+
+/* Noticeboard */
+.notice-card{
+  background:var(--panel);border-left:3px solid var(--gold);
+  border-radius:0 var(--radius) var(--radius) 0;
+  padding:16px 20px;margin-bottom:12px;
+}
+.notice-card h4{font-size:0.9rem;font-weight:600;color:var(--white);margin-bottom:5px;}
+.notice-card p{font-size:0.82rem;color:#A8C0D6;line-height:1.6;}
+.notice-card .notice-meta{font-size:0.7rem;color:var(--muted);margin-top:8px;}
+
+/* Misc */
+.pill{padding:3px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;}
+.pill-green{background:rgba(16,185,129,0.15);color:#6EE7B7;}
+.pill-blue {background:rgba(59,130,246,0.15);color:#93C5FD;}
+.pill-gold {background:rgba(201,168,76,0.15);color:var(--gold);}
+.empty-state{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty-state .es-icon{font-size:2.5rem;margin-bottom:10px;}
+.empty-state p{font-size:0.85rem;}
+.btn-sm{
+  padding:6px 14px;font-size:0.78rem;font-weight:600;border-radius:6px;
+  cursor:pointer;border:none;
+}
+.btn-sm-gold{background:var(--gold);color:#071628;}
+.btn-sm-outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-sm-outline:hover{border-color:var(--muted);color:var(--white);}
+.btn-sm-red{background:rgba(239,68,68,0.15);color:#FCA5A5;border:1px solid rgba(239,68,68,0.2);}
+.section-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.divider{border:none;border-top:1px solid var(--border);margin:20px 0;}
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:var(--green);color:#fff;padding:12px 20px;
+  border-radius:8px;font-size:0.85rem;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  animation:slideUp .3s ease;display:none;
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+@media(max-width:720px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .topbar{padding:12px 16px;}
+  .content-area{padding:16px;}
+  .stat-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ══════════════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════════════ -->
+<div id="login-page">
+  <div class="login-crest">🎓</div>
+  <div class="login-title">Clema Bedrock College</div>
+  <div class="login-sub">Student &amp; Staff Portal</div>
+
+  <div class="login-box">
+    <h3>Sign in to your account</h3>
+    <div class="lfield">
+      <label>User ID</label>
+      <input type="text" id="l-id" placeholder="e.g. STU-001 or TCH-01"/>
+    </div>
+    <div class="lfield">
+      <label>Password</label>
+      <input type="password" id="l-pw" placeholder="Enter password"/>
+    </div>
+    <div class="lfield">
+      <label>Sign in as</label>
+      <select id="l-role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Sign In →</button>
+    <div class="login-err" id="login-err">Incorrect ID or password. Please try again.</div>
+    <div class="login-footer">Clema Bedrock College · Powered by CBC EduPortal</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-crest">🎓</div>
+      <div class="brand-name">Clema Bedrock<span>College Portal</span></div>
+    </div>
+
+    <div class="user-chip">
+      <div class="role-badge" id="sb-role-badge">Student</div>
+      <div class="user-name" id="sb-name">—</div>
+      <div class="user-id"   id="sb-id">—</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" onclick="showSection('dashboard')" id="nav-dashboard">
+        <span class="icon">🏠</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showSection('notes')" id="nav-notes">
+        <span class="icon">📚</span> Subject Notes
+      </div>
+      <div class="nav-item" onclick="showSection('exams')" id="nav-exams">
+        <span class="icon">✏️</span> Exams
+      </div>
+      <div class="nav-item" onclick="showSection('results')" id="nav-results">
+        <span class="icon">📊</span> Results
+      </div>
+    </div>
+
+    <!-- Admin / Teacher only nav -->
+    <div class="nav-section" id="admin-nav" style="display:none;">
+      <div class="nav-section-label">Management</div>
+      <div class="nav-item" onclick="showSection('students')" id="nav-students">
+        <span class="icon">👥</span> Students
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">⬅ Sign Out</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <h2 id="page-title">Dashboard</h2>
+      <div class="term-badge">📅 Term 1 · 2026</div>
+    </div>
+
+    <div class="content-area">
+
+      <!-- ── DASHBOARD ─────────────────────────────────── -->
+      <div id="sec-dashboard">
+        <div class="stat-grid" id="stat-grid"></div>
+
+        <div class="widget">
+          <div class="widget-title">📌 Notices</div>
+          <div id="notice-list"></div>
+        </div>
+
+        <div class="widget" id="teacher-quick" style="display:none;">
+          <div class="widget-title">⚡ Quick Actions</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-sm btn-sm-gold" onclick="showSection('notes')">+ Add Notes</button>
+            <button class="btn-sm btn-sm-gold" onclick="showSection('students')">Manage Students</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUBJECT NOTES ──────────────────────────────── -->
+      <div id="sec-notes" style="display:none;">
+        <!-- Subject list -->
+        <div id="notes-subject-list">
+          <div class="notes-header">
+            <div>
+              <div style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Select a subject to view notes</div>
+            </div>
+            <div class="section-actions" id="add-note-btn-wrap" style="display:none;">
+              <button class="btn-sm btn-sm-gold" onclick="showAddNoteForm()">+ Add Note</button>
+            </div>
+          </div>
+          <div class="subject-grid" id="subject-grid"></div>
+        </div>
+
+        <!-- Note add form -->
+        <div id="note-add-form" style="display:none;">
+          <button class="back-btn" onclick="hideAddNoteForm()" style="margin-bottom:16px;">← Back</button>
+          <div class="add-note-form">
+            <h4>📝 Add New Note</h4>
+            <div class="form-field">
+              <label>Subject</label>
+              <select id="nf-subject">
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="Science">Science</option>
+                <option value="History">History</option>
+                <option value="Geography">Geography</option>
+                <option value="ICT">ICT</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Note Title</label>
+              <input type="text" id="nf-title" placeholder="e.g. Algebra — Solving Equations"/>
+            </div>
+            <div class="form-field">
+              <label>Content</label>
+              <textarea id="nf-body" placeholder="Type the note content here…"></textarea>
+            </div>
+            <div class="form-field">
+              <label>Tag (optional)</label>
+              <input type="text" id="nf-tag" placeholder="e.g. Week 3, Chapter 2"/>
+            </div>
+            <button class="btn-save" onclick="saveNote()">Save Note</button>
+            <button class="btn-cancel" onclick="hideAddNoteForm()">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Notes for selected subject -->
+        <div id="notes-detail" style="display:none;">
+          <div class="notes-header">
+            <button class="back-btn" onclick="backToSubjects()">← All Subjects</button>
+            <div class="section-actions">
+              <span id="notes-subject-title" style="font-size:1rem;font-weight:600;color:var(--white);"></span>
+            </div>
+            <button class="btn-sm btn-sm-gold" id="add-note-inline-btn" style="display:none;" onclick="showAddNoteForm()">+ Add Note</button>
+          </div>
+          <div id="notes-list"></div>
+        </div>
+      </div>
+
+      <!-- ── EXAMS ──────────────────────────────────────── -->
+      <div id="sec-exams" style="display:none;">
+        <!-- Exam list (student view / teacher view) -->
+        <div id="exam-list-view">
+          <div id="available-exams"></div>
+          <!-- Teacher: add exam placeholder -->
+          <div id="teacher-exam-tools" style="display:none;">
+            <hr class="divider"/>
+            <div class="widget">
+              <div class="widget-title">⚙️ Teacher Tools</div>
+              <p style="font-size:.82rem;color:var(--muted);margin-bottom:12px;">
+                To add/edit exam questions, update the <strong>EXAM_BANK</strong> object in the HTML file. Each exam maps to a subject key.
+              </p>
+              <button class="btn-sm btn-sm-gold" onclick="showSection('results')">View All Results →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam taking view -->
+        <div id="exam-taking">
+          <div class="exam-topbar">
+            <div style="font-family:'Crimson Pro',serif;font-size:1.1rem;" id="et-title">Exam</div>
+            <div class="timer-pill" id="et-timer">30:00</div>
+          </div>
+          <div style="padding:20px;">
+            <div class="prog-bar-wrap">
+              <div class="prog-track"><div class="prog-fill" id="et-prog" style="width:0%"></div></div>
+              <div class="prog-lbl" id="et-prog-lbl">0 / 0</div>
+            </div>
+            <div id="et-questions"></div>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+              <button class="btn-save" onclick="confirmSubmitExam()">Submit Exam ✓</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exam result (immediate) -->
+        <div id="exam-result-view" style="display:none;">
+          <button class="back-btn" onclick="backFromResult()" style="margin-bottom:16px;">← Back to Exams</button>
+          <div class="score-hero">
+            <div class="score-ring"><div class="sn" id="er-score">0</div><div class="sd" id="er-total">/0</div></div>
+            <h3 id="er-msg">Well done!</h3>
+            <p id="er-sub"></p>
+          </div>
+          <div class="widget">
+            <div class="widget-title">Question Breakdown</div>
+            <div id="er-breakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESULTS ────────────────────────────────────── -->
+      <div id="sec-results" style="display:none;">
+        <div class="widget">
+          <div class="widget-title" id="results-widget-title">My Exam History</div>
+          <div id="results-table-wrap">
+            <div class="empty-state">
+              <div class="es-icon">📊</div>
+              <p>No results yet. Take an exam to see your scores here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STUDENTS (admin/teacher) ──────────────────── -->
+      <div id="sec-students" style="display:none;">
+        <div class="widget">
+          <div class="widget-title">👥 Student Register</div>
+          <div style="overflow-x:auto;">
+            <table class="results-table" id="students-table">
+              <thead>
+                <tr>
+                  <th>Student ID</th><th>Name</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="students-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="widget" style="margin-top:20px;">
+          <div class="widget-title">➕ Add / Update Student</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-field"><label>Student ID</label><input type="text" id="ns-id" placeholder="STU-004"/></div>
+            <div class="form-field"><label>Full Name</label><input type="text" id="ns-name" placeholder="Jane Doe"/></div>
+            <div class="form-field"><label>Password</label><input type="password" id="ns-pw" placeholder="Set password"/></div>
+            <div class="form-field"><label>Status</label>
+              <select id="ns-status"><option value="active">Active</option><option value="blocked">Blocked</option></select>
+            </div>
+          </div>
+          <button class="btn-save" onclick="saveStudent()" style="margin-top:4px;">Save Student</button>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </main>
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  APPS SCRIPT URL — paste your deployed URL here
+// ═══════════════════════════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwZFAFSvgrER6m1K1sWqXV2Lv0WXSp1PNnqwfyyGVRvkyOt2yrzFe3TMmhi25wTJWCRvA/exec";
+
+// ═══════════════════════════════════════════════════════════════
+//  USER DATABASE  (stored here; mirrored to Sheet for admins)
+//  Format: { id, password, role, name, subjects[] }
+// ═══════════════════════════════════════════════════════════════
+let USERS = [
+  // ── ADMIN ──
+  { id:"ADMIN-01",  password:"admin123",   role:"admin",   name:"Principal Clems",       subjects:["all"] },
+  // ── TEACHERS ──
+  { id:"TCH-01",    password:"teach2026",  role:"teacher", name:"Mr. Adebayo",           subjects:["Mathematics","Science"] },
+  { id:"TCH-02",    password:"teach2026",  role:"teacher", name:"Mrs. Okonkwo",          subjects:["English","History"] },
+  // ── STUDENTS ──
+  { id:"STU-001",   password:"pass001",    role:"student", name:"Jane Doe",              subjects:["Mathematics","English","Science"] },
+  { id:"STU-002",   password:"pass002",    role:"student", name:"John Smith",            subjects:["Mathematics","History","Geography"] },
+  { id:"STU-003",   password:"pass003",    role:"student", name:"Alice Brown",           subjects:["English","Science","ICT"] },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  SUBJECT NOTES  (teacher-added, persisted in localStorage)
+// ═══════════════════════════════════════════════════════════════
+const SUBJECT_META = {
+  "Mathematics": { icon:"🔢", color:"#3B82F6" },
+  "English":     { icon:"📖", color:"#8B5CF6" },
+  "Science":     { icon:"🔬", color:"#10B981" },
+  "History":     { icon:"🏛️", color:"#F59E0B" },
+  "Geography":   { icon:"🌍", color:"#06B6D4" },
+  "ICT":         { icon:"💻", color:"#EC4899" },
+};
+
+let NOTES = JSON.parse(localStorage.getItem('cbc_notes') || '[]');
+if (!NOTES.length) {
+  NOTES = [
+    { id:1, subject:"Mathematics", title:"Introduction to Algebra", body:"Algebra is the branch of mathematics dealing with symbols and the rules for manipulating those symbols. Key terms: variable, coefficient, expression, equation.\n\nExample: Solve 3x + 6 = 15 → x = 3", tag:"Week 1", author:"Mr. Adebayo", date:"10 Jan 2026" },
+    { id:2, subject:"Mathematics", title:"Pythagoras' Theorem", body:"In a right-angled triangle: a² + b² = c²\nwhere c is the hypotenuse (longest side).\n\nExample: If a=3, b=4, then c = √(9+16) = √25 = 5", tag:"Week 2", author:"Mr. Adebayo", date:"17 Jan 2026" },
+    { id:3, subject:"English",     title:"Essay Structure", body:"A strong essay has three parts:\n1. Introduction — state your argument\n2. Body paragraphs — evidence and analysis (PEE: Point, Evidence, Explain)\n3. Conclusion — summarise and restate thesis", tag:"Writing Skills", author:"Mrs. Okonkwo", date:"12 Jan 2026" },
+    { id:4, subject:"Science",     title:"Cell Biology Basics", body:"All living things are made of cells. Key types:\n• Prokaryotic cells — no nucleus (bacteria)\n• Eukaryotic cells — has a nucleus (animals, plants)\n\nKey organelles: nucleus, mitochondria, cell membrane, cytoplasm", tag:"Chapter 1", author:"Mr. Adebayo", date:"14 Jan 2026" },
+  ];
+  localStorage.setItem('cbc_notes', JSON.stringify(NOTES));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  EXAM BANK
+// ═══════════════════════════════════════════════════════════════
+const EXAM_BANK = {
+  Mathematics: {
+    title:"Mathematics 101 — Exam",
+    duration:30,
+    questions:[
+      {type:"mcq",  text:"What is 15 × 8?",                          options:["100","120","115","125"],                         answer:"120"},
+      {type:"mcq",  text:"What is √144?",                            options:["10","11","12","13"],                             answer:"12"},
+      {type:"mcq",  text:"Solve: 3x + 9 = 24",                      options:["3","4","5","6"],                                 answer:"5"},
+      {type:"short",text:"What is π to 2 decimal places?",                                                                     answer:"3.14"},
+      {type:"mcq",  text:"Which is a prime number?",                 options:["21","27","29","33"],                             answer:"29"},
+      {type:"mcq",  text:"What is 2³ + 3²?",                        options:["15","17","19","21"],                             answer:"17"},
+    ]
+  },
+  English: {
+    title:"English Literature — Exam",
+    duration:25,
+    questions:[
+      {type:"mcq",  text:"Who wrote Romeo and Juliet?",              options:["Dickens","Shakespeare","Austen","Twain"],        answer:"Shakespeare"},
+      {type:"mcq",  text:"'The wind whispered' is an example of?",   options:["Simile","Metaphor","Personification","Rhyme"],   answer:"Personification"},
+      {type:"short",text:"Name the protagonist of Orwell's 1984.",                                                             answer:"Winston"},
+      {type:"mcq",  text:"'To be or not to be' is from?",           options:["Macbeth","Othello","Hamlet","Lear"],             answer:"Hamlet"},
+    ]
+  },
+  Science: {
+    title:"Science 301 — Exam",
+    duration:25,
+    questions:[
+      {type:"mcq",  text:"Chemical symbol for water?",               options:["WA","HO","H₂O","H₂O₂"],                        answer:"H₂O"},
+      {type:"mcq",  text:"Bones in the adult human body?",           options:["196","206","216","226"],                        answer:"206"},
+      {type:"short",text:"Planet closest to the Sun? (one word)",                                                             answer:"mercury"},
+      {type:"mcq",  text:"Powerhouse of the cell?",                  options:["Nucleus","Ribosome","Mitochondria","Vacuole"],  answer:"Mitochondria"},
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  RESULTS  (localStorage per student)
+// ═══════════════════════════════════════════════════════════════
+function getResults(uid) {
+  return JSON.parse(localStorage.getItem('cbc_results_'+uid) || '[]');
+}
+function saveResult(uid, rec) {
+  const arr = getResults(uid);
+  arr.push(rec);
+  localStorage.setItem('cbc_results_'+uid, JSON.stringify(arr));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NOTICES
+// ═══════════════════════════════════════════════════════════════
+const NOTICES = [
+  { title:"Term 1 Exams Begin 14 Feb 2026", body:"All students must bring their candidate numbers. Exams start at 9:00 AM sharp.", date:"5 Jan 2026" },
+  { title:"School Subscription Renewal Due", body:"All school portal subscriptions are renewable at the start of each term. Contact the admin office to avoid disruption.", date:"2 Jan 2026" },
+  { title:"Welcome Back!", body:"Welcome to the new term at Clema Bedrock College. Staff and students can now access notes, exams and results through this portal.", date:"1 Jan 2026" },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+let currentUser     = null;
+let currentSection  = 'dashboard';
+let activeSubject   = null;
+let examState       = {};
+let timerInterval   = null;
+
+// ═══════════════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ═══════════════════════════════════════════════════════════════
+function doLogin() {
+  const id   = document.getElementById('l-id').value.trim();
+  const pw   = document.getElementById('l-pw').value;
+  const role = document.getElementById('l-role').value;
+  const err  = document.getElementById('login-err');
+
+  const user = USERS.find(u =>
+    u.id.toLowerCase() === id.toLowerCase() &&
+    u.password === pw &&
+    u.role === role
+  );
+
+  if (!user) { err.style.display='block'; return; }
+  err.style.display='none';
+  currentUser = user;
+
+  // Blocked check (student only)
+  if (user.role==='student' && user.status==='blocked') {
+    alert('🔒 Your access has been suspended. Please contact the school administrator.');
+    return;
+  }
+
+  document.getElementById('login-page').style.display = 'none';
+  document.getElementById('app').style.display        = 'flex';
+  bootApp();
+}
+
+function doLogout() {
+  currentUser = null;
+  clearInterval(timerInterval);
+  document.getElementById('app').style.display        = 'none';
+  document.getElementById('login-page').style.display = 'flex';
+  document.getElementById('l-id').value='';
+  document.getElementById('l-pw').value='';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  BOOT APP
+// ═══════════════════════════════════════════════════════════════
+function bootApp() {
+  const u = currentUser;
+  // Sidebar user chip
+  document.getElementById('sb-name').textContent = u.name;
+  document.getElementById('sb-id').textContent   = u.id;
+  const badge = document.getElementById('sb-role-badge');
+  badge.textContent = u.role.charAt(0).toUpperCase()+u.role.slice(1);
+  badge.className   = `role-badge role-${u.role}`;
+
+  // Show admin nav
+  document.getElementById('admin-nav').style.display =
+    (u.role==='admin'||u.role==='teacher') ? 'block' : 'none';
+
+  showSection('dashboard');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+const SECTIONS = ['dashboard','notes','exams','results','students'];
+const SEC_TITLES = {
+  dashboard:'Dashboard', notes:'Subject Notes',
+  exams:'Exams', results:'Results', students:'Student Register'
+};
+
+function showSection(name) {
+  currentSection = name;
+  SECTIONS.forEach(s => {
+    document.getElementById('sec-'+s).style.display = s===name ? 'block' : 'none';
+    const nav = document.getElementById('nav-'+s);
+    if (nav) nav.classList.toggle('active', s===name);
+  });
+  document.getElementById('page-title').textContent = SEC_TITLES[name] || name;
+
+  if (name==='dashboard') renderDashboard();
+  if (name==='notes')     renderNotesSection();
+  if (name==='exams')     renderExamsSection();
+  if (name==='results')   renderResultsSection();
+  if (name==='students')  renderStudentsSection();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function renderDashboard() {
+  const u = currentUser;
+  const grid = document.getElementById('stat-grid');
+  const myResults = getResults(u.id);
+
+  let stats = [];
+  if (u.role==='student') {
+    const subjects = u.subjects.length;
+    const taken    = myResults.length;
+    const avgPct   = taken ? Math.round(myResults.reduce((a,r)=>a+r.percentage,0)/taken) : 0;
+    stats = [
+      {num:subjects, lbl:'Subjects Enrolled'},
+      {num:taken,    lbl:'Exams Taken'},
+      {num:avgPct+'%', lbl:'Average Score'},
+      {num:NOTES.filter(n=>u.subjects.includes(n.subject)).length, lbl:'Notes Available'},
+    ];
+  } else {
+    stats = [
+      {num:USERS.filter(u=>u.role==='student').length, lbl:'Total Students'},
+      {num:USERS.filter(u=>u.role==='teacher').length, lbl:'Teachers'},
+      {num:Object.keys(EXAM_BANK).length,              lbl:'Active Exams'},
+      {num:NOTES.length,                               lbl:'Notes Posted'},
+    ];
+  }
+
+  grid.innerHTML = stats.map(s=>`
+    <div class="stat-card">
+      <div class="stat-num">${s.num}</div>
+      <div class="stat-lbl">${s.lbl}</div>
+    </div>`).join('');
+
+  // Notices
+  document.getElementById('notice-list').innerHTML = NOTICES.map(n=>`
+    <div class="notice-card">
+      <h4>${n.title}</h4>
+      <p>${n.body}</p>
+      <div class="notice-meta">📅 ${n.date}</div>
+    </div>`).join('');
+
+  // Teacher quick actions
+  document.getElementById('teacher-quick').style.display =
+    (u.role!=='student') ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  NOTES
+// ═══════════════════════════════════════════════════════════════
+function renderNotesSection() {
+  showNotesView('subjects');
+  const u = currentUser;
+  const isStaff = u.role!=='student';
+  document.getElementById('add-note-btn-wrap').style.display = isStaff ? 'flex' : 'none';
+
+  const subjects = isStaff
+    ? Object.keys(SUBJECT_META)
+    : u.subjects;
+
+  document.getElementById('subject-grid').innerHTML = subjects.map(sub => {
+    const meta  = SUBJECT_META[sub] || {icon:'📄',color:'#888'};
+    const count = NOTES.filter(n=>n.subject===sub).length;
+    return `
+      <div class="subject-card" onclick="openSubject('${sub}')">
+        <div class="sub-icon">${meta.icon}</div>
+        <div class="sub-name">${sub}</div>
+        <div class="sub-meta">${count} note${count!==1?'s':''}</div>
+      </div>`;
+  }).join('');
+}
+
+function openSubject(sub) {
+  activeSubject = sub;
+  document.getElementById('notes-subject-title').textContent = (SUBJECT_META[sub]?.icon||'📄')+' '+sub;
+  document.getElementById('add-note-inline-btn').style.display =
+    currentUser.role!=='student' ? 'inline-block' : 'none';
+  showNotesView('detail');
+  renderNotesList(sub);
+}
+
+function renderNotesList(sub) {
+  const notes = NOTES.filter(n=>n.subject===sub);
+  const el    = document.getElementById('notes-list');
+  if (!notes.length) {
+    el.innerHTML=`<div class="empty-state"><div class="es-icon">📄</div><p>No notes yet for ${sub}.</p></div>`;
+    return;
+  }
+  el.innerHTML = notes.map((n,i)=>`
+    <div class="note-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+        <div class="note-title">${n.title}</div>
+        ${currentUser.role!=='student'
+          ?`<button class="btn-sm btn-sm-red" onclick="deleteNote(${n.id})">Delete</button>`
+          :''}
+      </div>
+      <div class="note-body">${n.body.replace(/\n/g,'<br/>')}</div>
+      <div class="note-meta">
+        ${n.tag?`<span class="note-tag">${n.tag}</span>`:''}
+        <span>✍️ ${n.author}</span>
+        <span>📅 ${n.date}</span>
+      </div>
+    </div>`).join('');
+}
+
+function showNotesView(view) {
+  document.getElementById('notes-subject-list').style.display = view==='subjects' ? 'block':'none';
+  document.getElementById('notes-detail').style.display       = view==='detail'   ? 'block':'none';
+  document.getElementById('note-add-form').style.display      = view==='add'      ? 'block':'none';
+}
+
+function backToSubjects() { showNotesView('subjects'); activeSubject=null; }
+
+function showAddNoteForm() { showNotesView('add'); }
+function hideAddNoteForm() {
+  activeSubject ? showNotesView('detail') : showNotesView('subjects');
+}
+
+function saveNote() {
+  const sub   = document.getElementById('nf-subject').value;
+  const title = document.getElementById('nf-title').value.trim();
+  const body  = document.getElementById('nf-body').value.trim();
+  const tag   = document.getElementById('nf-tag').value.trim();
+  if (!title||!body) { showToast('Please fill in title and content.','#EF4444'); return; }
+
+  const note = {
+    id:     Date.now(),
+    subject: sub, title, body, tag,
+    author: currentUser.name,
+    date:   new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+  };
+  NOTES.push(note);
+  localStorage.setItem('cbc_notes', JSON.stringify(NOTES));
+
+  document.getElementById('nf-title').value='';
+  document.getElementById('nf-body').value='';
+  document.getElementById('nf-tag').value='';
+
+  showToast('Note saved successfully! ✓');
+  activeSubject = sub;
+  showNotesView('detail');
+  renderNotesList(sub);
+}
+
+function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  NOTES = NOTES.filter(n=>n.id!==id);
+  localStorage.setItem('cbc_notes', JSON.stringify(NOTES));
+  renderNotesList(activeSubject);
+  showToast('Note deleted.','#F59E0B');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  EXAMS
+// ═══════════════════════════════════════════════════════════════
+function renderExamsSection() {
+  document.getElementById('exam-taking').style.display      = 'none';
+  document.getElementById('exam-result-view').style.display = 'none';
+  document.getElementById('exam-list-view').style.display   = 'block';
+
+  const u        = currentUser;
+  const subjects = u.role==='student' ? u.subjects : Object.keys(EXAM_BANK);
+  const myRes    = getResults(u.id);
+
+  document.getElementById('teacher-exam-tools').style.display = u.role!=='student'?'block':'none';
+
+  const avail = document.getElementById('available-exams');
+  const exams = subjects.filter(s=>EXAM_BANK[s]);
+
+  if (!exams.length) {
+    avail.innerHTML=`<div class="empty-state"><div class="es-icon">✏️</div><p>No exams available for your subjects.</p></div>`;
+    return;
+  }
+
+  avail.innerHTML = exams.map(sub=>{
+    const ex       = EXAM_BANK[sub];
+    const taken    = myRes.find(r=>r.subject===sub);
+    const meta     = SUBJECT_META[sub]||{icon:'📄'};
+    return `
+      <div class="exam-launch">
+        <div class="exam-info">
+          <div class="exam-name">${meta.icon} ${ex.title}</div>
+          <div class="exam-meta">⏱ ${ex.duration} min &nbsp;·&nbsp; ${ex.questions.length} questions
+            ${taken?` &nbsp;·&nbsp; <span class="pill pill-green">Completed — ${taken.percentage}%</span>`:''}
+          </div>
+        </div>
+        ${u.role==='student'
+          ?`<button class="btn-start-exam" onclick="startExam('${sub}')" ${taken?'disabled title="Already taken"':''}>
+              ${taken?'✓ Done':'Start Exam →'}
+            </button>`
+          :`<span class="pill pill-gold">Teacher View</span>`}
+      </div>`;
+  }).join('');
+}
+
+function startExam(subject) {
+  const ex = EXAM_BANK[subject];
+  examState = { subject, exam:ex, answers:{}, secondsLeft: ex.duration*60 };
+
+  document.getElementById('exam-list-view').style.display   = 'none';
+  document.getElementById('exam-result-view').style.display = 'none';
+  document.getElementById('exam-taking').style.display      = 'block';
+  document.getElementById('et-title').textContent           = ex.title;
+
+  renderExamQuestions();
+  startExamTimer();
+}
+
+function renderExamQuestions() {
+  const qs  = examState.exam.questions;
+  const el  = document.getElementById('et-questions');
+  el.innerHTML = qs.map((q,i)=>`
+    <div class="q-block">
+      <div class="q-num">Question ${i+1} of ${qs.length}</div>
+      <div class="q-text">${q.text}</div>
+      ${q.type==='mcq'
+        ?`<div>${q.options.map((opt,j)=>`
+            <label class="opt" id="opt-${i}-${j}">
+              <input type="radio" name="eq${i}" value="${opt}"
+                onchange="selectOpt(${i},${j},${q.options.length},'${opt}')"/>
+              ${opt}
+            </label>`).join('')}</div>`
+        :`<textarea class="short-in" id="eq-short-${i}" placeholder="Your answer…"
+            oninput="examState.answers[${i}]=this.value;updateExamProgress()"></textarea>`}
+    </div>`).join('');
+}
+
+function selectOpt(qi,ji,count,val) {
+  for(let k=0;k<count;k++){
+    const el=document.getElementById(`opt-${qi}-${k}`);
+    if(el) el.classList.toggle('sel',k===ji);
+  }
+  examState.answers[qi]=val;
+  updateExamProgress();
+}
+
+function updateExamProgress() {
+  const total    = examState.exam.questions.length;
+  const answered = Object.keys(examState.answers).filter(k=>examState.answers[k]).length;
+  const pct      = Math.round((answered/total)*100);
+  document.getElementById('et-prog').style.width   = pct+'%';
+  document.getElementById('et-prog-lbl').textContent = `${answered} / ${total} answered`;
+}
+
+function startExamTimer() {
+  clearInterval(timerInterval);
+  renderExamTimer();
+  timerInterval = setInterval(()=>{
+    examState.secondsLeft--;
+    renderExamTimer();
+    if(examState.secondsLeft<=0){ clearInterval(timerInterval); submitExam(); }
+  },1000);
+}
+function renderExamTimer() {
+  const m  = Math.floor(examState.secondsLeft/60).toString().padStart(2,'0');
+  const s  = (examState.secondsLeft%60).toString().padStart(2,'0');
+  const el = document.getElementById('et-timer');
+  el.textContent = `${m}:${s}`;
+  el.classList.toggle('warn', examState.secondsLeft<=120);
+}
+
+function confirmSubmitExam() {
+  const total    = examState.exam.questions.length;
+  const answered = Object.keys(examState.answers).filter(k=>examState.answers[k]).length;
+  const msg = answered<total
+    ? `You have ${total-answered} unanswered question(s). Submit anyway?`
+    : 'Submit your exam? This cannot be undone.';
+  if(confirm(msg)) submitExam();
+}
+
+function submitExam() {
+  clearInterval(timerInterval);
+  const qs=examState.exam.questions;
+  let score=0; const details=[];
+  qs.forEach((q,i)=>{
+    let given = '';
+    if(q.type==='mcq'){ given=examState.answers[i]||'(no answer)'; }
+    else{ const ta=document.getElementById(`eq-short-${i}`); given=ta?ta.value.trim():''; }
+    const correct=given.toLowerCase().trim()===q.answer.toLowerCase().trim();
+    if(correct) score++;
+    details.push({question:q.text,given,answer:q.answer,correct});
+  });
+
+  const pct   = Math.round((score/qs.length)*100);
+  const grade = getGrade(pct);
+  const rec   = {
+    subject: examState.subject, examTitle: examState.exam.title,
+    score, total:qs.length, percentage:pct, grade,
+    date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}),
+    details
+  };
+  saveResult(currentUser.id, rec);
+
+  // Push to Sheet
+  pushResultToSheet(rec);
+
+  showExamResult(rec);
+}
+
+function showExamResult(rec) {
+  document.getElementById('exam-taking').style.display      = 'none';
+  document.getElementById('exam-list-view').style.display   = 'none';
+  document.getElementById('exam-result-view').style.display = 'block';
+
+  document.getElementById('er-score').textContent = rec.score;
+  document.getElementById('er-total').textContent = '/'+rec.total;
+  const msg = rec.percentage>=80?'🏆 Excellent work!':rec.percentage>=60?'👍 Good effort!':rec.percentage>=40?'📖 Keep studying!':'💪 Don\'t give up!';
+  document.getElementById('er-msg').textContent = msg;
+  document.getElementById('er-sub').textContent  = `${currentUser.name} · ${rec.percentage}% · Grade ${rec.grade}`;
+
+  document.getElementById('er-breakdown').innerHTML = rec.details.map((d,i)=>`
+    <div class="breakdown-item">
+      <div class="bi-icon">${d.correct?'✅':'❌'}</div>
+      <div>
+        <div class="bi-qlbl">Question ${i+1}</div>
+        <div class="bi-qtext">${d.question}</div>
+        <div class="bi-ans">
+          ${d.correct
+            ?`<span class="ans-ok">Your answer: ${d.given} ✓</span>`
+            :`<span class="ans-bad">Your answer: ${d.given||'(no answer)'}</span>
+              &nbsp;·&nbsp;
+              <span class="ans-correct">Correct: ${d.answer}</span>`}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function backFromResult() {
+  document.getElementById('exam-result-view').style.display='none';
+  renderExamsSection();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RESULTS
+// ═══════════════════════════════════════════════════════════════
+function renderResultsSection() {
+  const u = currentUser;
+  let allResults = [];
+
+  if (u.role==='student') {
+    allResults = getResults(u.id).map(r=>({...r, studentName:u.name, studentId:u.id}));
+    document.getElementById('results-widget-title').textContent='My Exam History';
+  } else {
+    // Admin/teacher: show all students' results
+    USERS.filter(s=>s.role==='student').forEach(s=>{
+      getResults(s.id).forEach(r=>allResults.push({...r,studentName:s.name,studentId:s.id}));
+    });
+    document.getElementById('results-widget-title').textContent='All Student Results';
+  }
+
+  const wrap = document.getElementById('results-table-wrap');
+  if(!allResults.length){
+    wrap.innerHTML=`<div class="empty-state"><div class="es-icon">📊</div><p>No results yet.</p></div>`;
+    return;
+  }
+
+  const showStudent = u.role!=='student';
+  wrap.innerHTML=`<div style="overflow-x:auto;"><table class="results-table">
+    <thead><tr>
+      ${showStudent?'<th>Student</th>':''}
+      <th>Exam</th><th>Score</th><th>%</th><th>Grade</th><th>Date</th>
+    </tr></thead>
+    <tbody>
+    ${allResults.map(r=>{
+      const gc=r.grade==='A+'||r.grade==='A'?'grade-a':r.grade==='B'?'grade-b':r.grade==='C'?'grade-c':'grade-f';
+      return `<tr>
+        ${showStudent?`<td><div style="font-weight:600;color:var(--white);">${r.studentName}</div><div style="font-size:.72rem;color:var(--muted);">${r.studentId}</div></td>`:''}
+        <td>${r.examTitle}</td>
+        <td>${r.score} / ${r.total}</td>
+        <td>${r.percentage}%</td>
+        <td><span class="grade-pill ${gc}">${r.grade}</span></td>
+        <td style="color:var(--muted);font-size:.8rem;">${r.date}</td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STUDENTS (admin / teacher)
+// ═══════════════════════════════════════════════════════════════
+function renderStudentsSection() {
+  const students = USERS.filter(u=>u.role==='student');
+  document.getElementById('students-tbody').innerHTML = students.map(s=>`
+    <tr>
+      <td style="font-weight:600;">${s.id}</td>
+      <td>${s.name}</td>
+      <td><span class="pill ${s.status==='blocked'?'pill-red':'pill-green'}" style="${s.status==='blocked'?'background:rgba(239,68,68,.15);color:#FCA5A5;':''}">
+        ${s.status||'active'}
+      </span></td>
+      <td>
+        <button class="btn-sm btn-sm-outline" style="margin-right:6px;"
+          onclick="toggleStudentStatus('${s.id}')">
+          ${(s.status||'active')==='blocked'?'✅ Unblock':'🔒 Block'}
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function toggleStudentStatus(id) {
+  const s = USERS.find(u=>u.id===id);
+  if(!s) return;
+  s.status = (s.status||'active')==='active' ? 'blocked' : 'active';
+  renderStudentsSection();
+  showToast(`${s.name} is now ${s.status.toUpperCase()}.`, s.status==='blocked'?'#EF4444':'#10B981');
+}
+
+function saveStudent() {
+  const id     = document.getElementById('ns-id').value.trim();
+  const name   = document.getElementById('ns-name').value.trim();
+  const pw     = document.getElementById('ns-pw').value;
+  const status = document.getElementById('ns-status').value;
+  if(!id||!name||!pw){ showToast('Fill in all fields.','#EF4444'); return; }
+
+  const existing = USERS.find(u=>u.id.toLowerCase()===id.toLowerCase());
+  if(existing){ existing.name=name; existing.password=pw; existing.status=status; }
+  else {
+    USERS.push({id,name,password:pw,role:'student',status,subjects:['Mathematics','English','Science']});
+  }
+  document.getElementById('ns-id').value='';
+  document.getElementById('ns-name').value='';
+  document.getElementById('ns-pw').value='';
+  renderStudentsSection();
+  showToast(`Student ${name} saved! ✓`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SHEET PUSH
+// ═══════════════════════════════════════════════════════════════
+async function pushResultToSheet(rec) {
+  try {
+    await fetch(APPS_SCRIPT_URL,{
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'submitExam',
+        studentName:currentUser.name, studentId:currentUser.id,
+        examTitle:rec.examTitle, score:rec.score, total:rec.total,
+        percentage:rec.percentage, timestamp:rec.date,
+        details:rec.details.map(d=>({question:d.question,given:d.given,correct:d.correct}))
+      })
+    });
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════
+function getGrade(pct){
+  if(pct>=90)return'A+'; if(pct>=80)return'A';
+  if(pct>=70)return'B';  if(pct>=60)return'C';
+  if(pct>=50)return'D';  return'F';
+}
+
+let toastTimer;
+function showToast(msg, color='#10B981') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=color; t.style.display='block';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.style.display='none',3000);
+}
+</script>
+</body>
+</html>
